@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Solana Phantom Sniper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h2 { margin-bottom: 10px; }
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background-color: #3f51b5;
+      color: white;
+      font-weight: bold;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .row button {
+      flex: 1;
+    }
+    .section {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Phantom Sniper Dashboard</h2>
+
+  <button id="connect">Connect Phantom Wallet</button>
+  <div id="wallet-address"></div>
+
+  <div class="section">
+    <label>Slippage %</label>
+    <input type="number" id="slippage" value="2" step="0.1" min="0.1">
+  </div>
+
+  <div class="section">
+    <label>Token Address</label>
+    <input type="text" id="tokenAddress" placeholder="Paste token address here">
+  </div>
+
+  <div class="section">
+    <label>Buy with:</label>
+    <div class="row">
+      <button onclick="buyAmount(0.2)">0.2 SOL</button>
+      <button onclick="buyAmount(0.5)">0.5 SOL</button>
+    </div>
+    <div class="row">
+      <button onclick="buyAmount(1)">1 SOL</button>
+      <button onclick="buyAmount(3)">3 SOL</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <label>Sell:</label>
+    <div class="row">
+      <button onclick="sellPercent(15)">15%</button>
+      <button onclick="sellPercent(50)">50%</button>
+      <button onclick="sellPercent(100)">100%</button>
+    </div>
+  </div>
+
+  <script>
+    const { Connection, PublicKey } = solanaWeb3;
+    let provider = window.solana;
+    let wallet = null;
+
+    async function connectWallet() {
+      if (!provider?.isPhantom) {
+        alert("Phantom wallet not found!");
+        return;
+      }
+      const res = await provider.connect();
+      wallet = res.publicKey;
+      document.getElementById("wallet-address").innerText = `Connected: ${wallet.toString()}`;
+    }
+
+    async function buyAmount(solAmount) {
+      const tokenAddress = document.getElementById("tokenAddress").value.trim();
+      const slippage = parseFloat(document.getElementById("slippage").value);
+
+      if (!tokenAddress || !wallet) {
+        alert("Connect wallet and enter token.");
+        return;
+      }
+
+      alert(`Buy ${solAmount} SOL of ${tokenAddress} with ${slippage}% slippage (placeholder).`);
+      // Real swap logic comes here next using Jupiter API
+    }
+
+    async function sellPercent(percent) {
+      const slippage = parseFloat(document.getElementById("slippage").value);
+      alert(`Sell ${percent}% of your token with ${slippage}% slippage (placeholder).`);
+      // Real sell logic goes here
+    }
+
+    document.getElementById("connect").addEventListener("click", connectWallet);
+  </script>
+</body>
+</html>
